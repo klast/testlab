@@ -56,19 +56,9 @@ int main(int argc, char **argv)
 	int sock;
 	struct sockaddr_in addr;
 	int port = 3425;
-	int a=0;
-	int b=0;
-	printf("Print m = ");
-	scanf("%i",&a);
-	printf("Print n = ");
-	scanf("%i",&b);
-	if(a<0 && b<0)
-	{
-		printf("There is no total square's between your values\n");
-		return 0;
-	}
-	char * message = msg(a,b);
-	char buf[1024];
+	char passwd[1024];
+	printf("Print your password: ");
+	scanf("%[^\n]s", passwd);
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(sock < 0)
 	{
@@ -83,10 +73,37 @@ int main(int argc, char **argv)
 		perror("connect");
 		exit(2);
 	}
-	send(sock, message, sizeof(message), 0);
-	recv(sock, buf, 1024, 0);
-	printf(buf);
-	printf("\n");
-	close(sock);
-	return 0;
+	char passwd_buf[1024];
+	send(sock, passwd, strlen(passwd)*sizeof(char), 0);
+	recv(sock, passwd_buf, 1024, 0);
+	printf("%s\n",passwd_buf);
+	if(strcmp(passwd_buf, "GOOD") != 0)
+	{
+		printf("Access denied! Wrong password!\n");
+		close(sock);
+		return -1;
+	}
+	else
+	{
+		printf("Access granted!\n");
+		int a=0;
+		int b=0;
+		printf("Print m = ");
+		scanf("%i",&a);
+		printf("Print n = ");
+		scanf("%i",&b);
+		if(a<0 && b<0)
+		{
+			printf("There is no total square's between your values\n");
+			return 0;
+		}
+		char * message = msg(a,b);
+		char buf[1024];
+		send(sock, message, sizeof(message), 0);
+		recv(sock, buf, 1024, 0);
+		printf(buf);
+		printf("\n");
+		close(sock);
+		return 0;
+	}
 }
