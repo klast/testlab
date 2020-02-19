@@ -44,25 +44,32 @@ int main(int argc, char **argv)
 		while(1)
 		{
 			char passwd[] = "YODA";
-			char passwd_buf[1024];
+			char *passwd_buf = (char*)malloc(1024*sizeof(char));
 			bytes_read = recv(sock, passwd_buf, 1024, 0);
-			if(bytes_read <= 0) break;
-			//printf("%s %i\n",passwd_buf, strlen(passwd_buf));
+			if(bytes_read <= 0)
+			{ 
+				free(passwd_buf);
+				break;
+			}
 			int passwd_size = strlen(passwd_buf);
-			/*for(int i = 0; i < passwd_size; i++)
+			for(int i = 0; i < passwd_size; i++)
 			{
-				printf("%d\n", (int)passwd_buf[i]);
-			}*/
-			passwd_buf[passwd_size-2] = '\0';
-			/*printf("%s %i\n",passwd_buf, strlen(passwd_buf));
-			printf("passwd = %s %i\n", passwd, strlen(passwd));*/
+				//printf("%c %i\n",passwd_buf[i], (int) passwd_buf[i]);
+				if((int)passwd_buf[i]<0)
+				{
+				    passwd_buf[i] = '\0';
+				    break;
+				}
+			}
 			if(strcmp(passwd_buf, passwd)==0)
 			{
 				send(sock, "GOOD", 4*sizeof(char), 0);
+				free(passwd_buf);
 			}
 			else
 			{
 				send(sock, "BAD", 3*sizeof(char), 0);
+				free(passwd_buf);
 				break;
 			}
 			bytes_read = recv(sock, buf, 1024, 0);
