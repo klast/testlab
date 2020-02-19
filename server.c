@@ -47,15 +47,15 @@ int main(int argc, char **argv)
 			char passwd_buf[1024];
 			bytes_read = recv(sock, passwd_buf, 1024, 0);
 			if(bytes_read <= 0) break;
-			printf("%s %i\n",passwd_buf, strlen(passwd_buf));
+			//printf("%s %i\n",passwd_buf, strlen(passwd_buf));
 			int passwd_size = strlen(passwd_buf);
-			for(int i = 0; i < passwd_size; i++)
+			/*for(int i = 0; i < passwd_size; i++)
 			{
 				printf("%d\n", (int)passwd_buf[i]);
-			}
+			}*/
 			passwd_buf[passwd_size-2] = '\0';
-			printf("%s %i\n",passwd_buf, strlen(passwd_buf));
-			printf("passwd = %s %i\n", passwd, strlen(passwd));
+			/*printf("%s %i\n",passwd_buf, strlen(passwd_buf));
+			printf("passwd = %s %i\n", passwd, strlen(passwd));*/
 			if(strcmp(passwd_buf, passwd)==0)
 			{
 				send(sock, "GOOD", 4*sizeof(char), 0);
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 				send(sock, "BAD", 3*sizeof(char), 0);
 				break;
 			}
-			bytes_read = recv(sock, passwd_buf, 1024, 0);
+			bytes_read = recv(sock, buf, 1024, 0);
 			if(bytes_read <= 0) break;
 			int max=sizeof(buf);
 			char* first=(char*)malloc(max);

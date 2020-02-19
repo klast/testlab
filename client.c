@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 	int port = 3425;
 	char passwd[1024];
 	printf("Print your password: ");
-	scanf("%[^\n]s", passwd);
+	scanf("%s", passwd);
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(sock < 0)
 	{
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 	char passwd_buf[1024];
 	send(sock, passwd, strlen(passwd)*sizeof(char), 0);
 	recv(sock, passwd_buf, 1024, 0);
-	printf("%s\n",passwd_buf);
+	//printf("%s\n",passwd_buf);
 	if(strcmp(passwd_buf, "GOOD") != 0)
 	{
 		printf("Access denied! Wrong password!\n");
